@@ -1,7 +1,4 @@
-import React from "react";
-import { Helmet } from "react-helmet";
-
-const AntenLocation = () => {
+const useTrajectories = () => {
     var trajectories = new Map();
 
     var lastGetTrajectories = Date.now();
@@ -450,22 +447,7 @@ const AntenLocation = () => {
         }
     }
 
-    draw();
-
-    return (
-        <div
-            style={{
-                width: "100%",
-                background: "white",
-                height: 500,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-            }}
-        >
-            <canvas id="canvas" height="500px" width="400px"></canvas>
-        </div>
-    );
+    return { draw };
 };
 
-export default AntenLocation;
+export default useTrajectories;

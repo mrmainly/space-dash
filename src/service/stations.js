@@ -6,7 +6,10 @@ export const Stations = api.injectEndpoints({
         getStations: build.query({
             query: () => `satellites/`,
         }),
+        getStationsSlug: build.query({
+            query: ({ slug }) => `satellites/${slug}/`,
+        }),
     }),
 });
 
-export const { useGetStationsQuery } = Stations;
+export const { useGetStationsQuery, useGetStationsSlugQuery } = Stations;

@@ -5,7 +5,7 @@ import { styled } from "@mui/system";
 
 import { Text, Table } from "../../components";
 import { useGetStationsQuery } from "../../service/stations";
-import AntenLocation from "../../components/anten-location-dash";
+import TrajectoriesDashboard from "../../components/trajectories-dashboard";
 
 const Maket = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -18,9 +18,9 @@ const Maket = styled(Box)(({ theme }) => ({
 }));
 
 const Home = () => {
-    const { data } = useGetStationsQuery();
+    const { data: allStations, isFetching } = useGetStationsQuery();
 
-    console.log(data);
+    console.log(allStations);
 
     return (
         <Box
@@ -37,7 +37,7 @@ const Home = () => {
                     <Maket sx={{ height: "100%" }}>Карта</Maket>
                 </Grid>
                 <Grid item lg={4}>
-                    <AntenLocation />
+                    <TrajectoriesDashboard />
                 </Grid>
                 <Grid item lg={4}>
                     <Maket />
@@ -49,7 +49,7 @@ const Home = () => {
                     <Maket />
                 </Grid>
                 <Grid item lg={12}>
-                    <Table />
+                    <Table data={allStations?.results} />
                 </Grid>
             </Grid>
         </Box>
