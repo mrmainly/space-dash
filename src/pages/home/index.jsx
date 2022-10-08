@@ -3,7 +3,9 @@ import React from "react";
 import { Box, Grid } from "@mui/material";
 import { styled } from "@mui/system";
 
-import { Text } from "../../components";
+import { Text, Table } from "../../components";
+import { useGetStationsQuery } from "../../service/stations";
+import AntenLocation from "../../components/anten-location-dash";
 
 const Maket = styled(Box)(({ theme }) => ({
     display: "flex",
@@ -12,9 +14,14 @@ const Maket = styled(Box)(({ theme }) => ({
     background: "white",
     width: "100%",
     height: 300,
+    color: "black",
 }));
 
 const Home = () => {
+    const { data } = useGetStationsQuery();
+
+    console.log(data);
+
     return (
         <Box
             sx={{
@@ -26,11 +33,11 @@ const Home = () => {
         >
             <Text variant="h4">МАИ-РСЯ-01</Text>
             <Grid container spacing={2} sx={{ mt: 5 }}>
-                <Grid item lg={7}>
-                    <Maket />
+                <Grid item lg={8}>
+                    <Maket sx={{ height: "100%" }}>Карта</Maket>
                 </Grid>
-                <Grid item lg={5}>
-                    <Maket />
+                <Grid item lg={4}>
+                    <AntenLocation />
                 </Grid>
                 <Grid item lg={4}>
                     <Maket />
@@ -42,7 +49,7 @@ const Home = () => {
                     <Maket />
                 </Grid>
                 <Grid item lg={12}>
-                    <Maket />
+                    <Table />
                 </Grid>
             </Grid>
         </Box>
