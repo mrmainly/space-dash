@@ -8,8 +8,15 @@ import {
     Table,
     Button,
 } from "@mui/material";
+import { useDispatch } from "react-redux";
 
-const MyTable = ({ data, navigate_to }) => {
+import { stations_slice } from "../../reducers/stations_slice";
+
+const MyTable = ({ data }) => {
+    const { changeStation } = stations_slice.actions;
+
+    const dispatch = useDispatch();
+
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -41,7 +48,13 @@ const MyTable = ({ data, navigate_to }) => {
                                 <TableCell align="center"></TableCell>
 
                                 <TableCell align="center">
-                                    <Button>добавить новый slug</Button>
+                                    <Button
+                                        onClick={() =>
+                                            changeStation(dispatch(row.slug))
+                                        }
+                                    >
+                                        добавить новый slug
+                                    </Button>
                                 </TableCell>
                             </TableRow>
                         ))

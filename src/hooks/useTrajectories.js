@@ -1,4 +1,4 @@
-const useTrajectories = () => {
+const useTrajectories = ({ station, trajectorie }) => {
     var trajectories = new Map();
 
     var lastGetTrajectories = Date.now();
@@ -21,89 +21,69 @@ const useTrajectories = () => {
     }
 
     function getAngles(callback) {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-            if (this.response && this.readyState == 4 && this.status == 200) {
-                var telem = JSON.parse(this.response).telem;
-                az = parseFloat(telem.az);
-                el = parseFloat(telem.el);
-                isParked = telem.parked == "true";
-            }
-        };
-        xhttp.open(
-            "GET",
-            "https://gsn.yktaero.space/api/stations/sjsa0-sputnix-uhf/",
-            true
-        );
-        xhttp.send();
+        if (station) {
+            var telem = station.telem;
+            az = parseFloat(telem.az);
+            el = parseFloat(telem.el);
+            isParked = telem.parked == "true";
+        }
     }
 
     function getTrajectories() {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-            if (this.response && this.readyState == 4 && this.status == 200) {
-                var schedule = JSON.parse(this.response).schedule;
+        if (trajectorie) {
+            var schedule = trajectorie.schedule;
 
-                for (var i = 0; i < schedule.length; i++) {
-                    var trajName = schedule[i].sat;
+            for (var i = 0; i < schedule.length; i++) {
+                var trajName = schedule[i].sat;
 
-                    if (!trajectories.has(trajName))
-                        trajectories.set(trajName, [[]]);
-                    else trajectories.get(trajName).push([]);
+                if (!trajectories.has(trajName))
+                    trajectories.set(trajName, [[]]);
+                else trajectories.get(trajName).push([]);
 
-                    for (var j = 0; j < schedule[i].trajectory.length; j++) {
-                        var point = getPointByAngles(
-                            parseFloat(schedule[i].trajectory[j][2]),
-                            parseFloat(schedule[i].trajectory[j][1])
-                        );
-                        var toPush = new trajPoint(
-                            Date.parse(schedule[i].trajectory[j][0]),
-                            point[0],
-                            point[1]
-                        );
+                for (var j = 0; j < schedule[i].trajectory.length; j++) {
+                    var point = getPointByAngles(
+                        parseFloat(schedule[i].trajectory[j][2]),
+                        parseFloat(schedule[i].trajectory[j][1])
+                    );
+                    var toPush = new trajPoint(
+                        Date.parse(schedule[i].trajectory[j][0]),
+                        point[0],
+                        point[1]
+                    );
 
-                        if (
-                            trajectories.get(trajName)[
+                    if (
+                        trajectories.get(trajName)[
+                            trajectories.get(trajName).length - 1
+                        ].length > 1
+                    ) {
+                        toPush.x =
+                            (trajectories.get(trajName)[
                                 trajectories.get(trajName).length - 1
-                            ].length > 1
-                        ) {
-                            toPush.x =
-                                (trajectories.get(trajName)[
+                            ][
+                                trajectories.get(trajName)[
                                     trajectories.get(trajName).length - 1
-                                ][
-                                    trajectories.get(trajName)[
-                                        trajectories.get(trajName).length - 1
-                                    ].length - 1
-                                ].x +
-                                    toPush.x) /
-                                2.0;
-                            toPush.y =
-                                (trajectories.get(trajName)[
+                                ].length - 1
+                            ].x +
+                                toPush.x) /
+                            2.0;
+                        toPush.y =
+                            (trajectories.get(trajName)[
+                                trajectories.get(trajName).length - 1
+                            ][
+                                trajectories.get(trajName)[
                                     trajectories.get(trajName).length - 1
-                                ][
-                                    trajectories.get(trajName)[
-                                        trajectories.get(trajName).length - 1
-                                    ].length - 1
-                                ].y +
-                                    toPush.y) /
-                                2.0;
-                        }
-
-                        trajectories
-                            .get(trajName)
-                            [trajectories.get(trajName).length - 1].push(
-                                toPush
-                            );
+                                ].length - 1
+                            ].y +
+                                toPush.y) /
+                            2.0;
                     }
+
+                    trajectories
+                        .get(trajName)
+                        [trajectories.get(trajName).length - 1].push(toPush);
                 }
             }
-        };
-        xhttp.open(
-            "GET",
-            "https://gsn.yktaero.space/api/trajectories/sjsa0-sputnix-uhf/",
-            true
-        );
-        xhttp.send();
+        }
     }
 
     function degtorad(deg) {

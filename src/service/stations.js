@@ -1,15 +1,14 @@
 import { api } from "./api";
 
-export const Stations = api.injectEndpoints({
+export const stations_slice = api.injectEndpoints({
     endpoints: (build) => ({
-        //аттестуемые
         getStations: build.query({
-            query: () => `satellites/`,
+            query: () => `stations/`,
         }),
         getStationsSlug: build.query({
-            query: ({ slug }) => `satellites/${slug}/`,
+            query: ({ slug }) => `stations/${slug}/`,
         }),
     }),
 });
 
-export const { useGetStationsQuery, useGetStationsSlugQuery } = Stations;
+export const { useGetStationsQuery, useGetStationsSlugQuery } = stations_slice;

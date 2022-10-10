@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import useTrajectories from "../../hooks/useTrajectories";
 
-const TrajectoriesDashboard = () => {
-    const { draw } = useTrajectories();
+const TrajectoriesDashboard = ({ station, trajectorie }) => {
+    const { draw } = useTrajectories({ station, trajectorie });
 
-    draw();
+    useEffect(() => {
+        draw();
+    }, [station, trajectorie]);
 
     return (
         <div
